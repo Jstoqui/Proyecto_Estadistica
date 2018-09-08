@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>SUELTA Y ARRASTRA</title>
+		<script src="http://d3js.org/d3.v3.min.js"></script>
+		
+	</head>
+	<body>
+		<svg id="map" width="100%" height="450"></svg>
+	
+		<script>
+            var MOVE_STEP = 100;
+			
+					
+			var map = d3.select("#map")
+				.attr("width", 960)
+				.attr("height", 450);
+				
+			var container = map.append("g");
+		
+			
+			//Dibuja dos circulos
+			var circulo1 = container.append("circle")
+							.attr("cx", 90)
+							.attr("cy", 90)
+							.attr("r", 90)
+							.style("fill", "#642EFE")
+							.classed('draggable', true);
+			var circulo2 = container.append("circle")
+							.attr("cx", 70)
+							.attr("cy", 70)
+							.attr("r", 70)
+							.style("fill", "#DF013A")
+							.classed('draggable', true);	
+			
+			
+			// Crea el comportamiento de arrastrar y soltar para establecer para los objetos creados
+			var drag = d3.behavior.drag()
+				.origin(function(d) { return d; })
+				.on("dragstart", dragstarted)
+				.on("drag", dragged);
+			
+			// Se invoca cuando se inicia el evento de arrastre. Detener la propagación del evento click
+			function dragstarted(d){
+				d3.event.sourceEvent.stopPropagation();
+			}
+			
+			// Llamado cuando ocurre el evento de arrastre (el objeto debe ser movido)
+			function dragged(d){
+				d.x = d3.event.x;
+				d.y = d3.event.y;
+				
+	        // Traduce el objeto en el punto movido real
+				d3.select(this).attr({
+					transform: "translate(" + d.x + "," + d.y + ")"
+				});
+			}
+							
+			// Matriz que contiene las coordenadas x;y de los objetos creados (usados para eventos arrastrables)
+			nodos_dato = [
+				{x: 0,y: 0}, {x: 0,y: 0}, {x: 0,y: 0}
+			];
+			
+			// Establece el comportamiento de arrastre en los objetos que tiene la clase "dragged" y establecer su posición en la ventana (por la matriz "nodos_dato")	
+			nodos = container.selectAll(".draggable").call(drag).data(nodos_dato);
+		
+		</script>
+		
+		
+    </body>
+</html>
